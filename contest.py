@@ -7,7 +7,7 @@ def get_html(url):
     return get(url).content
 
 def get_problems(contest_id):
-    url = "https://codeforces.com/contest/" + str(contest_id)
+    url = "https://codeforces.com/contest/" + contest_id
     res = []
     soup = BeautifulSoup(get_html(url), "html.parser")
     table = soup.select("table.problems")[0]
@@ -20,15 +20,19 @@ def get_problems(contest_id):
 
 def make_folders(problems, contest_id):
     if os.path.exists(str(contest_id)):
-        os.system("rm -r {}".format(str(contest_id)))
+        os.system("rm -r {}".format(contest_id))
     for name in problems:
-        os.system("mkdir -p {}/{}".format(str(contest_id), name))
+        os.system("mkdir -p {}/{}".format(contest_id, name))
     from os.path import expanduser
     home = expanduser("~")
     for name in problems:
         with open("{}/cpp/tpl.cpp".format(home), "r") as tpl:
-            with open("{}/{}/{}.cpp".format(str(contest_id), name, name), "w") as f:
+            with open("{}/{}/{}.cpp".format(contest_id, name, name), "w") as f:
                 f.write(tpl.read())
+            with open("{}/{}/input.txt".format(contest_id, name), "w") as f:
+                f.write("")
+            with open("{}/{}/output.txt".format(contest_id, name), "w") as f:
+                f.write("")
 
 def main():
     contest_id = sys.argv[1]
